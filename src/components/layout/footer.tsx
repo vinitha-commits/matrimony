@@ -6,7 +6,7 @@ export function PublicFooter() {
   return (
     <footer className="border-t border-neutral-200 bg-neutral-50">
       {/* Trust strip */}
-      <div className="border-b border-neutral-200">
+      {/* <div className="border-b border-neutral-200">
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-center gap-8 px-4 py-6 md:px-8 lg:px-20">
           <div className="flex items-center gap-2 text-sm text-neutral-600">
             <Shield className="h-5 w-5 text-success" />
@@ -25,7 +25,7 @@ export function PublicFooter() {
             <span>1,200+ Marriages</span>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main footer */}
       <div className="mx-auto max-w-[1280px] px-4 py-12 md:px-8 lg:px-20">

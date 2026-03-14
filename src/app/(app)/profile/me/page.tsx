@@ -29,6 +29,14 @@ import {
   STAR_COMPATIBILITY_OPTIONS,
   DOSHAM_PREF_OPTIONS,
   DIET_PREF_OPTIONS,
+  EMPLOYMENT_TYPE_OPTIONS,
+  CITIZENSHIP_OPTIONS,
+  CHILDREN_ACCEPTABLE_OPTIONS,
+  SMOKING_PREF_OPTIONS,
+  DRINKING_PREF_OPTIONS,
+  COMPLEXION_OPTIONS,
+  PHYSICAL_DISABILITY_PREF_OPTIONS,
+  FAMILY_TYPE_PREF_OPTIONS,
 } from "@/lib/constants";
 
 export default function MyProfilePage() {
@@ -63,20 +71,39 @@ export default function MyProfilePage() {
     new Set(["Music", "Reading", "Travel", "Yoga", "Cooking"])
   );
 
-  // Partner Preferences
+  // Partner Preferences — Basic
   const [prefAgeMin, setPrefAgeMin] = useState("26");
   const [prefAgeMax, setPrefAgeMax] = useState("32");
   const [prefHeightMin, setPrefHeightMin] = useState("5'6\"");
   const [prefHeightMax, setPrefHeightMax] = useState("6'0\"");
+  const [prefMaritalStatus, setPrefMaritalStatus] = useState<Set<string>>(new Set(["never_married"]));
+  const [prefChildrenOk, setPrefChildrenOk] = useState("doesnt_matter");
+  // Community & Language
+  const [prefMotherTongues, setPrefMotherTongues] = useState<Set<string>>(new Set(["Tamil"]));
+  const [prefCommunities, setPrefCommunities] = useState<Set<string>>(new Set(["Brahmin - Iyer", "Brahmin - Iyengar"]));
+  const [prefGothra, setPrefGothra] = useState("");
+  // Education & Career
   const [prefEducation, setPrefEducation] = useState("");
   const [prefOccupation, setPrefOccupation] = useState("");
-  const [prefCommunities, setPrefCommunities] = useState<Set<string>>(new Set(["Brahmin - Iyer", "Brahmin - Iyengar"]));
+  const [prefEmploymentType, setPrefEmploymentType] = useState("any");
+  const [prefIncomeMin, setPrefIncomeMin] = useState("");
+  // Location & Residency
   const [prefState, setPrefState] = useState("Tamil Nadu");
   const [prefCity, setPrefCity] = useState("");
+  const [prefCitizenship, setPrefCitizenship] = useState("any");
+  // Horoscope
   const [prefStarCompat, setPrefStarCompat] = useState("preferred");
   const [prefDosham, setPrefDosham] = useState("doesnt_matter");
+  // Lifestyle
   const [prefDiet, setPrefDiet] = useState("doesnt_matter");
-  const [prefMaritalStatus, setPrefMaritalStatus] = useState<Set<string>>(new Set(["never_married"]));
+  const [prefSmokingOk, setPrefSmokingOk] = useState("no");
+  const [prefDrinkingOk, setPrefDrinkingOk] = useState("no");
+  // Family
+  const [prefFamilyType, setPrefFamilyType] = useState("any");
+  const [prefFamilyStatus, setPrefFamilyStatus] = useState<Set<string>>(new Set());
+  // Physical
+  const [prefComplexion, setPrefComplexion] = useState("any");
+  const [prefDisability, setPrefDisability] = useState("doesnt_matter");
 
   const handleSave = (section: string) => {
     setSaved(section);
@@ -103,6 +130,24 @@ export default function MyProfilePage() {
 
   const togglePrefMarital = (s: string) => {
     setPrefMaritalStatus((prev) => {
+      const next = new Set(prev);
+      if (next.has(s)) next.delete(s);
+      else next.add(s);
+      return next;
+    });
+  };
+
+  const togglePrefMotherTongue = (l: string) => {
+    setPrefMotherTongues((prev) => {
+      const next = new Set(prev);
+      if (next.has(l)) next.delete(l);
+      else next.add(l);
+      return next;
+    });
+  };
+
+  const togglePrefFamilyStatus = (s: string) => {
+    setPrefFamilyStatus((prev) => {
       const next = new Set(prev);
       if (next.has(s)) next.delete(s);
       else next.add(s);
@@ -370,86 +415,193 @@ export default function MyProfilePage() {
 
         {/* ─── Partner Preferences ─── */}
         <TabsContent value="preferences">
-          <Card variant="flat" padding="lg" className="space-y-5">
-            {/* Age Range */}
-            <div>
-              <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.ageRangeLabel}</p>
-              <div className="grid grid-cols-2 gap-4">
-                <Select
-                  label={t.profile.ageMin}
-                  value={prefAgeMin}
-                  onValueChange={(v) => { setPrefAgeMin(v); if (Number(v) > Number(prefAgeMax)) setPrefAgeMax(v); }}
-                  options={Array.from({ length: 43 }, (_, i) => ({ value: String(18 + i), label: `${18 + i} yrs` }))}
-                />
-                <Select
-                  label={t.profile.ageMax}
-                  value={prefAgeMax}
-                  onValueChange={(v) => { setPrefAgeMax(v); if (Number(v) < Number(prefAgeMin)) setPrefAgeMin(v); }}
-                  options={Array.from({ length: 43 }, (_, i) => ({ value: String(18 + i), label: `${18 + i} yrs` }))}
-                />
-              </div>
-            </div>
+          <div className="space-y-6">
 
-            {/* Height Range */}
-            <div>
-              <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.heightRange}</p>
-              <div className="grid grid-cols-2 gap-4">
-                <Select
-                  label="Min Height"
-                  value={prefHeightMin}
-                  onValueChange={setPrefHeightMin}
-                  options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
-                />
-                <Select
-                  label="Max Height"
-                  value={prefHeightMax}
-                  onValueChange={setPrefHeightMax}
-                  options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
-                />
-              </div>
-            </div>
+            {/* ── Section 1: Basic ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                Basic Preferences
+              </h3>
 
-            {/* Education */}
-            <Select
-              label={t.profile.educationLabel}
-              value={prefEducation || undefined}
-              onValueChange={setPrefEducation}
-              placeholder="Any education"
-              options={EDUCATION_LEVELS.flatMap((g) =>
-                g.options.map((o) => ({ value: o, label: o, group: g.group }))
-              )}
-            />
-
-            {/* Occupation */}
-            <Select
-              label={t.profile.occupationLabel}
-              value={prefOccupation || undefined}
-              onValueChange={setPrefOccupation}
-              placeholder="Any occupation"
-              options={OCCUPATIONS.map((o) => ({ value: o, label: o }))}
-            />
-
-            {/* Preferred Communities */}
-            <div>
-              <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.communities}</p>
-              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto rounded-lg border border-neutral-200 p-3">
-                {COMMUNITIES.map((c) => (
-                  <Checkbox
-                    key={c}
-                    label={c}
-                    checked={prefCommunities.has(c)}
-                    onCheckedChange={() => togglePrefCommunity(c)}
+              {/* Age Range */}
+              <div>
+                <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.ageRangeLabel}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <Select
+                    label={t.profile.ageMin}
+                    value={prefAgeMin}
+                    onValueChange={(v) => { setPrefAgeMin(v); if (Number(v) > Number(prefAgeMax)) setPrefAgeMax(v); }}
+                    options={Array.from({ length: 43 }, (_, i) => ({ value: String(18 + i), label: `${18 + i} yrs` }))}
                   />
-                ))}
+                  <Select
+                    label={t.profile.ageMax}
+                    value={prefAgeMax}
+                    onValueChange={(v) => { setPrefAgeMax(v); if (Number(v) < Number(prefAgeMin)) setPrefAgeMin(v); }}
+                    options={Array.from({ length: 43 }, (_, i) => ({ value: String(18 + i), label: `${18 + i} yrs` }))}
+                  />
+                </div>
               </div>
-              {prefCommunities.size > 0 && (
-                <p className="mt-1.5 text-xs text-neutral-500">{prefCommunities.size} selected</p>
-              )}
-            </div>
 
-            {/* Preferred Location */}
-            <div>
-              <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.locations}</p>
+              {/* Height Range */}
+              <div>
+                <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.heightRange}</p>
+                <div className="grid grid-cols-2 gap-4">
+                  <Select
+                    label="Min Height"
+                    value={prefHeightMin}
+                    onValueChange={setPrefHeightMin}
+                    options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
+                  />
+                  <Select
+                    label="Max Height"
+                    value={prefHeightMax}
+                    onValueChange={setPrefHeightMax}
+                    options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
+                  />
+                </div>
+              </div>
+
+              {/* Marital Status */}
+              <div>
+                <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.maritalStatus}</p>
+                <div className="space-y-2">
+                  {MARITAL_STATUS_OPTIONS.map((s) => (
+                    <Checkbox
+                      key={s.value}
+                      label={s.label}
+                      checked={prefMaritalStatus.has(s.value)}
+                      onCheckedChange={() => togglePrefMarital(s.value)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Children Acceptable — Only relevant if divorced/widowed is selected */}
+              {(prefMaritalStatus.has("divorced") || prefMaritalStatus.has("widowed")) && (
+                <Select
+                  label="Accept Partner with Children?"
+                  value={prefChildrenOk}
+                  onValueChange={setPrefChildrenOk}
+                  options={CHILDREN_ACCEPTABLE_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+                />
+              )}
+
+              {/* Complexion */}
+              <Select
+                label="Complexion Preference"
+                value={prefComplexion}
+                onValueChange={setPrefComplexion}
+                options={COMPLEXION_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+              />
+
+              {/* Physical Disability */}
+              <Select
+                label="Physical Disability"
+                value={prefDisability}
+                onValueChange={setPrefDisability}
+                options={PHYSICAL_DISABILITY_PREF_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+              />
+            </Card>
+
+            {/* ── Section 2: Community & Language ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900">Community & Language</h3>
+
+              {/* Mother Tongue */}
+              <div>
+                <p className="text-sm font-medium text-neutral-600 mb-2">Mother Tongue</p>
+                <div className="flex flex-wrap gap-2">
+                  {MOTHER_TONGUES.map((l) => (
+                    <button
+                      key={l}
+                      onClick={() => togglePrefMotherTongue(l)}
+                      className={`rounded-full px-3.5 py-1.5 text-xs font-medium border transition-colors ${
+                        prefMotherTongues.has(l)
+                          ? "bg-primary-50 border-primary-500 text-primary-700"
+                          : "bg-white border-neutral-200 text-neutral-600 hover:border-neutral-300"
+                      }`}
+                    >
+                      {l}
+                    </button>
+                  ))}
+                </div>
+                {prefMotherTongues.size > 0 && (
+                  <p className="mt-1.5 text-xs text-neutral-500">{prefMotherTongues.size} selected</p>
+                )}
+              </div>
+
+              {/* Preferred Communities */}
+              <div>
+                <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.communities}</p>
+                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto rounded-lg border border-neutral-200 p-3">
+                  {COMMUNITIES.map((c) => (
+                    <Checkbox
+                      key={c}
+                      label={c}
+                      checked={prefCommunities.has(c)}
+                      onCheckedChange={() => togglePrefCommunity(c)}
+                    />
+                  ))}
+                </div>
+                {prefCommunities.size > 0 && (
+                  <p className="mt-1.5 text-xs text-neutral-500">{prefCommunities.size} selected</p>
+                )}
+              </div>
+
+              {/* Gothra to avoid */}
+              <div>
+                <Input
+                  label="Gothra to Avoid (Same Gothra)"
+                  value={prefGothra}
+                  onChange={(e) => setPrefGothra(e.target.value)}
+                  placeholder="e.g., Bharadwaj"
+                />
+                <p className="mt-1 text-xs text-neutral-500">Traditionally, marriages within the same gothra are avoided.</p>
+              </div>
+            </Card>
+
+            {/* ── Section 3: Education & Career ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900">Education & Career</h3>
+
+              <Select
+                label={t.profile.educationLabel}
+                value={prefEducation || undefined}
+                onValueChange={setPrefEducation}
+                placeholder="Any education"
+                options={EDUCATION_LEVELS.flatMap((g) =>
+                  g.options.map((o) => ({ value: o, label: o, group: g.group }))
+                )}
+              />
+
+              <Select
+                label={t.profile.occupationLabel}
+                value={prefOccupation || undefined}
+                onValueChange={setPrefOccupation}
+                placeholder="Any occupation"
+                options={OCCUPATIONS.map((o) => ({ value: o, label: o }))}
+              />
+
+              <Select
+                label="Employment Type"
+                value={prefEmploymentType}
+                onValueChange={setPrefEmploymentType}
+                options={EMPLOYMENT_TYPE_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+              />
+
+              <Select
+                label="Minimum Annual Income"
+                value={prefIncomeMin || undefined}
+                onValueChange={setPrefIncomeMin}
+                placeholder="No minimum"
+                options={INCOME_RANGES.map((r) => ({ value: r, label: r }))}
+              />
+            </Card>
+
+            {/* ── Section 4: Location & Residency ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900">Location & Residency</h3>
+
               <div className="grid grid-cols-2 gap-4">
                 <Select
                   label="State"
@@ -471,50 +623,92 @@ export default function MyProfilePage() {
                   disabled={!prefState}
                 />
               </div>
-            </div>
 
-            {/* Marital Status */}
-            <div>
-              <p className="text-sm font-medium text-neutral-600 mb-2">{t.profile.maritalStatus}</p>
-              <div className="space-y-2">
-                {MARITAL_STATUS_OPTIONS.map((s) => (
-                  <Checkbox
-                    key={s.value}
-                    label={s.label}
-                    checked={prefMaritalStatus.has(s.value)}
-                    onCheckedChange={() => togglePrefMarital(s.value)}
-                  />
-                ))}
+              <Select
+                label="Citizenship / Residency"
+                value={prefCitizenship}
+                onValueChange={setPrefCitizenship}
+                options={CITIZENSHIP_OPTIONS.map((o) => ({ value: o.value, label: o.label }))}
+              />
+            </Card>
+
+            {/* ── Section 5: Horoscope ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900">Horoscope Matching</h3>
+
+              <Select
+                label={t.profile.starCompatibility}
+                value={prefStarCompat}
+                onValueChange={setPrefStarCompat}
+                options={STAR_COMPATIBILITY_OPTIONS.map((s) => ({ value: s.value, label: s.label }))}
+              />
+
+              <Select
+                label={t.profile.dosham}
+                value={prefDosham}
+                onValueChange={setPrefDosham}
+                options={DOSHAM_PREF_OPTIONS.map((d) => ({ value: d.value, label: d.label }))}
+              />
+            </Card>
+
+            {/* ── Section 6: Lifestyle ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900">Lifestyle Preferences</h3>
+
+              <Select
+                label={t.profile.diet}
+                value={prefDiet}
+                onValueChange={setPrefDiet}
+                options={DIET_PREF_OPTIONS.map((d) => ({ value: d.value, label: d.label }))}
+              />
+
+              <Select
+                label="Smoking"
+                value={prefSmokingOk}
+                onValueChange={setPrefSmokingOk}
+                options={SMOKING_PREF_OPTIONS.map((s) => ({ value: s.value, label: s.label }))}
+              />
+
+              <Select
+                label="Drinking"
+                value={prefDrinkingOk}
+                onValueChange={setPrefDrinkingOk}
+                options={DRINKING_PREF_OPTIONS.map((d) => ({ value: d.value, label: d.label }))}
+              />
+            </Card>
+
+            {/* ── Section 7: Family Background ── */}
+            <Card variant="flat" padding="lg" className="space-y-5">
+              <h3 className="text-base font-semibold text-neutral-900">Family Background</h3>
+
+              <Select
+                label="Family Type"
+                value={prefFamilyType}
+                onValueChange={setPrefFamilyType}
+                options={FAMILY_TYPE_PREF_OPTIONS.map((f) => ({ value: f.value, label: f.label }))}
+              />
+
+              <div>
+                <p className="text-sm font-medium text-neutral-600 mb-2">Family Status</p>
+                <div className="space-y-2">
+                  {FAMILY_STATUS_OPTIONS.map((s) => (
+                    <Checkbox
+                      key={s}
+                      label={s}
+                      checked={prefFamilyStatus.has(s)}
+                      onCheckedChange={() => togglePrefFamilyStatus(s)}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            </Card>
 
-            {/* Star Compatibility */}
-            <Select
-              label={t.profile.starCompatibility}
-              value={prefStarCompat}
-              onValueChange={setPrefStarCompat}
-              options={STAR_COMPATIBILITY_OPTIONS.map((s) => ({ value: s.value, label: s.label }))}
-            />
-
-            {/* Dosham Preference */}
-            <Select
-              label={t.profile.dosham}
-              value={prefDosham}
-              onValueChange={setPrefDosham}
-              options={DOSHAM_PREF_OPTIONS.map((d) => ({ value: d.value, label: d.label }))}
-            />
-
-            {/* Diet Preference */}
-            <Select
-              label={t.profile.diet}
-              value={prefDiet}
-              onValueChange={setPrefDiet}
-              options={DIET_PREF_OPTIONS.map((d) => ({ value: d.value, label: d.label }))}
-            />
-
-            {saved === "preferences" && <p className="text-sm text-success font-medium">Preferences saved successfully!</p>}
-            <Button variant="primary" size="md" onClick={() => handleSave("preferences")}>{t.profile.savePreferences}</Button>
-          </Card>
+            {/* Save */}
+            <Card variant="flat" padding="lg">
+              {saved === "preferences" && <p className="text-sm text-success font-medium mb-3">Preferences saved successfully!</p>}
+              <Button variant="primary" size="lg" fullWidth onClick={() => handleSave("preferences")}>{t.profile.savePreferences}</Button>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -96,16 +96,36 @@ export interface ProfilePhoto {
 }
 
 export interface PartnerPreferences {
+  // Basic
   ageRange: [number, number];
   heightRange: [string, string];
+  maritalStatus: MaritalStatus[];
+  childrenAcceptable: "no" | "yes" | "doesnt_matter";
+  // Community & Language
+  motherTongues: string[];
+  communities: string[];
+  gothra: string;
+  // Education & Career
   education: string[];
   occupation: string[];
-  communities: string[];
+  employmentType: "any" | "employed" | "business" | "government" | "not_working_ok";
+  annualIncomeMin: string;
+  // Location & Residency
   locations: string[];
+  citizenship: "any" | "indian" | "nri" | "open_to_relocate";
+  // Horoscope
   starCompatibility: "must" | "preferred" | "not_important";
   dosham: "must_not" | "doesnt_matter";
+  // Lifestyle
   diet: "must_veg" | "doesnt_matter";
-  maritalStatus: MaritalStatus[];
+  smokingAcceptable: "no" | "occasionally_ok" | "doesnt_matter";
+  drinkingAcceptable: "no" | "occasionally_ok" | "doesnt_matter";
+  // Family
+  familyType: "any" | "nuclear" | "joint";
+  familyStatus: string[];
+  // Physical
+  complexion: "any" | "very_fair" | "fair" | "wheatish" | "dark";
+  physicalDisability: "no_disability" | "doesnt_matter";
 }
 
 export interface MatchCard {

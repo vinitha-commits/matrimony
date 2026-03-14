@@ -84,16 +84,36 @@ const profileSchema = new Schema(
    ============================================================ */
 const partnerPreferencesSchema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  // Basic
   ageRange: { type: [Number], default: [22, 32] },
   heightRange: { type: [String], default: ["5'0\"", "6'0\""] },
+  maritalStatus: [String],
+  childrenAcceptable: { type: String, enum: ["no", "yes", "doesnt_matter"], default: "doesnt_matter" },
+  // Community & Language
+  motherTongues: [String],
+  communities: [String],
+  gothra: { type: String, default: "" }, // gothra to avoid (same gothra)
+  // Education & Career
   education: [String],
   occupation: [String],
-  communities: [String],
+  employmentType: { type: String, enum: ["any", "employed", "business", "government", "not_working_ok"], default: "any" },
+  annualIncomeMin: String,
+  // Location & Residency
   locations: [String],
+  citizenship: { type: String, enum: ["any", "indian", "nri", "open_to_relocate"], default: "any" },
+  // Horoscope
   starCompatibility: { type: String, enum: ["must", "preferred", "not_important"], default: "preferred" },
   dosham: { type: String, enum: ["must_not", "doesnt_matter"], default: "doesnt_matter" },
+  // Lifestyle
   diet: { type: String, enum: ["must_veg", "doesnt_matter"], default: "doesnt_matter" },
-  maritalStatus: [String],
+  smokingAcceptable: { type: String, enum: ["no", "occasionally_ok", "doesnt_matter"], default: "no" },
+  drinkingAcceptable: { type: String, enum: ["no", "occasionally_ok", "doesnt_matter"], default: "no" },
+  // Family
+  familyType: { type: String, enum: ["any", "nuclear", "joint"], default: "any" },
+  familyStatus: [String],
+  // Physical
+  complexion: { type: String, enum: ["any", "very_fair", "fair", "wheatish", "dark"], default: "any" },
+  physicalDisability: { type: String, enum: ["no_disability", "doesnt_matter"], default: "doesnt_matter" },
 });
 
 /* ============================================================

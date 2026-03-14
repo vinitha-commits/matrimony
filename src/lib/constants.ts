@@ -474,6 +474,58 @@ export const DIET_PREF_OPTIONS = [
   { value: "doesnt_matter", label: "Doesn't Matter" },
 ] as const;
 
+export const EMPLOYMENT_TYPE_OPTIONS = [
+  { value: "any", label: "Doesn't Matter" },
+  { value: "employed", label: "Employed (Private/MNC)" },
+  { value: "business", label: "Business / Self-Employed" },
+  { value: "government", label: "Government / PSU" },
+  { value: "not_working_ok", label: "Not Working is OK" },
+] as const;
+
+export const CITIZENSHIP_OPTIONS = [
+  { value: "any", label: "Doesn't Matter" },
+  { value: "indian", label: "Indian Citizen (India Based)" },
+  { value: "nri", label: "NRI / Abroad Settled" },
+  { value: "open_to_relocate", label: "Open to Relocate Abroad" },
+] as const;
+
+export const CHILDREN_ACCEPTABLE_OPTIONS = [
+  { value: "doesnt_matter", label: "Doesn't Matter" },
+  { value: "no", label: "Should Not Have Children" },
+  { value: "yes", label: "OK with Children" },
+] as const;
+
+export const SMOKING_PREF_OPTIONS = [
+  { value: "no", label: "Must Not Smoke" },
+  { value: "occasionally_ok", label: "Occasionally is OK" },
+  { value: "doesnt_matter", label: "Doesn't Matter" },
+] as const;
+
+export const DRINKING_PREF_OPTIONS = [
+  { value: "no", label: "Must Not Drink" },
+  { value: "occasionally_ok", label: "Occasionally is OK" },
+  { value: "doesnt_matter", label: "Doesn't Matter" },
+] as const;
+
+export const COMPLEXION_OPTIONS = [
+  { value: "any", label: "Doesn't Matter" },
+  { value: "very_fair", label: "Very Fair" },
+  { value: "fair", label: "Fair" },
+  { value: "wheatish", label: "Wheatish" },
+  { value: "dark", label: "Dark" },
+] as const;
+
+export const PHYSICAL_DISABILITY_PREF_OPTIONS = [
+  { value: "no_disability", label: "No Physical Disability" },
+  { value: "doesnt_matter", label: "Doesn't Matter" },
+] as const;
+
+export const FAMILY_TYPE_PREF_OPTIONS = [
+  { value: "any", label: "Doesn't Matter" },
+  { value: "nuclear", label: "Nuclear Family" },
+  { value: "joint", label: "Joint Family" },
+] as const;
+
 export const PORUTHAMS = [
   { name: "Dina Porutham", tamilName: "தின பொருத்தம்" },
   { name: "Gana Porutham", tamilName: "கண பொருத்தம்" },

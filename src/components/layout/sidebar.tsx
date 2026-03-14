@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
@@ -23,7 +24,15 @@ interface SidebarProps {
   isPremium?: boolean;
 }
 
-export function Sidebar({ profileCompletion = 75, isPremium = false }: SidebarProps) {
+export function Sidebar(props: SidebarProps) {
+  return (
+    <Suspense>
+      <SidebarInner {...props} />
+    </Suspense>
+  );
+}
+
+function SidebarInner({ profileCompletion = 75, isPremium = false }: SidebarProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { t } = useTranslation();

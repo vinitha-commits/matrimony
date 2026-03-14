@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent, EmptyState, Badge } from "@/components/ui";
 import { InterestCard } from "@/components/domain";
@@ -87,6 +87,14 @@ const MOCK_ACCEPTED: Interest[] = [
 ];
 
 export default function InterestsPage() {
+  return (
+    <Suspense>
+      <InterestsPageInner />
+    </Suspense>
+  );
+}
+
+function InterestsPageInner() {
   const { t } = useTranslation();
   const searchParams = useSearchParams();
   const router = useRouter();

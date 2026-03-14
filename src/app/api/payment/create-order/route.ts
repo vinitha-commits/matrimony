@@ -3,12 +3,10 @@ import Razorpay from "razorpay";
 import { connectDB } from "@/lib/db/connection";
 import { User } from "@/lib/db/models";
 
-function getRazorpay() {
-  return new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID!,
-    key_secret: process.env.RAZORPAY_KEY_SECRET!,
-  });
-}
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID!,
+  key_secret: process.env.RAZORPAY_KEY_SECRET!,
+});
 
 const PLAN_AMOUNTS: Record<string, number> = {
   premium_3: 2999,
@@ -37,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     const amount = PLAN_AMOUNTS[planId] * 100; // Razorpay uses paise
 
-    const order = await getRazorpay().orders.create({
+    const order = await razorpay.orders.create({
       amount,
       currency: "INR",
       receipt: `sub_${userId}_${planId}_${Date.now()}`,

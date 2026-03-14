@@ -954,13 +954,13 @@ function FilterPanel({
         <div className="grid grid-cols-2 gap-2">
           <Select
             placeholder="Min"
-            value={filters.heightMin}
+            value={filters.heightMin || undefined}
             onValueChange={(v) => setFilters((p) => ({ ...p, heightMin: v }))}
             options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
           />
           <Select
             placeholder="Max"
-            value={filters.heightMax}
+            value={filters.heightMax || undefined}
             onValueChange={(v) => setFilters((p) => ({ ...p, heightMax: v }))}
             options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
           />
@@ -984,18 +984,18 @@ function FilterPanel({
       <FilterSection title="Mother Tongue" id="motherTongue" expanded={expandedSections.has("motherTongue")} onToggle={toggleSection}>
         <Select
           placeholder="Any language"
-          value={filters.motherTongue}
+          value={filters.motherTongue || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, motherTongue: v }))}
-          options={[{ value: "", label: "Any" }, ...MOTHER_TONGUES.map((l) => ({ value: l, label: l }))]}
+          options={MOTHER_TONGUES.map((l) => ({ value: l, label: l }))}
         />
       </FilterSection>
 
       <FilterSection title="Community / Caste" id="community" expanded={expandedSections.has("community")} onToggle={toggleSection}>
         <Select
           placeholder="Any community"
-          value={filters.community}
+          value={filters.community || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, community: v }))}
-          options={[{ value: "", label: "Any" }, ...COMMUNITIES.map((c) => ({ value: c, label: c }))]}
+          options={COMMUNITIES.map((c) => ({ value: c, label: c }))}
         />
       </FilterSection>
 
@@ -1003,30 +1003,27 @@ function FilterPanel({
       <FilterSection title="Education" id="education" expanded={expandedSections.has("education")} onToggle={toggleSection}>
         <Select
           placeholder="Any education"
-          value={filters.education}
+          value={filters.education || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, education: v }))}
-          options={[
-            { value: "", label: "Any" },
-            ...EDUCATION_LEVELS.flatMap((g) => g.options.map((o) => ({ value: o, label: o, group: g.group }))),
-          ]}
+          options={EDUCATION_LEVELS.flatMap((g) => g.options.map((o) => ({ value: o, label: o, group: g.group })))}
         />
       </FilterSection>
 
       <FilterSection title="Occupation" id="occupation" expanded={expandedSections.has("occupation")} onToggle={toggleSection}>
         <Select
           placeholder="Any occupation"
-          value={filters.occupation}
+          value={filters.occupation || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, occupation: v }))}
-          options={[{ value: "", label: "Any" }, ...OCCUPATIONS.map((o) => ({ value: o, label: o }))]}
+          options={OCCUPATIONS.map((o) => ({ value: o, label: o }))}
         />
       </FilterSection>
 
       <FilterSection title="Annual Income" id="income" expanded={expandedSections.has("income")} onToggle={toggleSection}>
         <Select
           placeholder="Any income"
-          value={filters.income}
+          value={filters.income || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, income: v }))}
-          options={[{ value: "", label: "Any" }, ...INCOME_RANGES.map((r) => ({ value: r, label: r }))]}
+          options={INCOME_RANGES.map((r) => ({ value: r, label: r }))}
         />
       </FilterSection>
 
@@ -1043,18 +1040,18 @@ function FilterPanel({
       <FilterSection title="Nakshatra (Star)" id="nakshatra" expanded={expandedSections.has("nakshatra")} onToggle={toggleSection}>
         <Select
           placeholder="Any nakshatra"
-          value={filters.nakshatra}
+          value={filters.nakshatra || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, nakshatra: v }))}
-          options={[{ value: "", label: "Any" }, ...NAKSHATRAS.map((n) => ({ value: n, label: n }))]}
+          options={NAKSHATRAS.map((n) => ({ value: n, label: n }))}
         />
       </FilterSection>
 
       <FilterSection title="Dosham" id="dosham" expanded={expandedSections.has("dosham")} onToggle={toggleSection}>
         <Select
           placeholder="Any"
-          value={filters.dosham}
+          value={filters.dosham || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, dosham: v }))}
-          options={[{ value: "", label: "Any" }, ...DOSHAM_OPTIONS.map((d) => ({ value: d, label: d }))]}
+          options={DOSHAM_OPTIONS.map((d) => ({ value: d, label: d }))}
         />
       </FilterSection>
 
@@ -1133,9 +1130,9 @@ function FilterPanel({
       <FilterSection title="Family Status" id="familyStatus" expanded={expandedSections.has("familyStatus")} onToggle={toggleSection}>
         <Select
           placeholder="Any"
-          value={filters.familyStatus}
+          value={filters.familyStatus || undefined}
           onValueChange={(v) => setFilters((p) => ({ ...p, familyStatus: v }))}
-          options={[{ value: "", label: "Any" }, ...FAMILY_STATUS_OPTIONS.map((s) => ({ value: s, label: s }))]}
+          options={FAMILY_STATUS_OPTIONS.map((s) => ({ value: s, label: s }))}
         />
       </FilterSection>
 

@@ -401,6 +401,79 @@ export const STATE_CITIES: Record<string, string[]> = {
 
 export const ALL_CITIES = Object.values(STATE_CITIES).flat();
 
+export const RASHIS = [
+  "Mesha (Aries)",
+  "Vrishabha (Taurus)",
+  "Mithuna (Gemini)",
+  "Karka (Cancer)",
+  "Simha (Leo)",
+  "Kanya (Virgo)",
+  "Tula (Libra)",
+  "Vrischika (Scorpio)",
+  "Dhanu (Sagittarius)",
+  "Makara (Capricorn)",
+  "Kumbha (Aquarius)",
+  "Meena (Pisces)",
+] as const;
+
+export const FAMILY_TYPE_OPTIONS = ["Joint Family", "Nuclear Family"] as const;
+
+export const FAMILY_STATUS_OPTIONS = [
+  "Middle Class",
+  "Upper Middle Class",
+  "Rich",
+  "Affluent",
+] as const;
+
+export const MARITAL_STATUS_OPTIONS = [
+  { value: "never_married", label: "Never Married" },
+  { value: "divorced", label: "Divorced" },
+  { value: "widowed", label: "Widowed" },
+  { value: "awaiting_divorce", label: "Awaiting Divorce" },
+] as const;
+
+export const DOSHAM_OPTIONS = [
+  "No Dosham",
+  "Chevvai Dosham",
+  "Rahu-Ketu Dosham",
+  "Don't Know",
+] as const;
+
+export const DIET_OPTIONS = [
+  { value: "vegetarian", label: "Vegetarian" },
+  { value: "non_vegetarian", label: "Non-Vegetarian" },
+  { value: "eggetarian", label: "Eggetarian" },
+  { value: "vegan", label: "Vegan" },
+] as const;
+
+export const SMOKING_OPTIONS = [
+  { value: "no", label: "No" },
+  { value: "occasionally", label: "Occasionally" },
+  { value: "yes", label: "Yes" },
+] as const;
+
+export const DRINKING_OPTIONS = [
+  { value: "no", label: "No" },
+  { value: "occasionally", label: "Occasionally" },
+  { value: "yes", label: "Yes" },
+] as const;
+
+export const STAR_COMPATIBILITY_OPTIONS = [
+  { value: "must", label: "Must Match" },
+  { value: "preferred", label: "Preferred" },
+  { value: "not_important", label: "Not Important" },
+] as const;
+
+export const DOSHAM_PREF_OPTIONS = [
+  { value: "must_not", label: "Must Not Have Dosham" },
+  { value: "doesnt_matter", label: "Doesn't Matter" },
+] as const;
+
+export const DIET_PREF_OPTIONS = [
+  { value: "must_veg", label: "Must Be Vegetarian" },
+  { value: "doesnt_matter", label: "Doesn't Matter" },
+] as const;
+
 export const PORUTHAMS = [
   { name: "Dina Porutham", tamilName: "தின பொருத்தம்" },
   { name: "Gana Porutham", tamilName: "கண பொருத்தம்" },

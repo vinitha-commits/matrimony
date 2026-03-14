@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Shield, Bell, LogOut, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui";
 import {
@@ -95,7 +96,7 @@ export default function AdminLayout({
                   <Link href="/admin/settings">Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-error">
+                <DropdownMenuItem className="text-error cursor-pointer" onClick={() => signOut({ callbackUrl: "/admin-login" })}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </DropdownMenuItem>

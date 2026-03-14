@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   LayoutDashboard,
   Heart,
@@ -25,6 +25,7 @@ interface SidebarProps {
 
 export function Sidebar({ profileCompletion = 75, isPremium = false }: SidebarProps) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { t } = useTranslation();
 
   const SIDEBAR_LINKS = [
@@ -76,7 +77,10 @@ export function Sidebar({ profileCompletion = 75, isPremium = false }: SidebarPr
           }
 
           const Icon = item.icon;
-          const isActive = pathname === item.href || pathname.startsWith(item.href.split("?")[0]);
+          const [linkPath, linkQuery] = item.href.split("?");
+          const isActive = linkQuery
+            ? pathname === linkPath && searchParams.toString() === linkQuery
+            : pathname === item.href;
 
           return (
             <Link

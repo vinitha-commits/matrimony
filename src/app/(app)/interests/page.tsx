@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent, EmptyState, Badge } from "@/components/ui";
 import { InterestCard } from "@/components/domain";
 import { Heart, Send, Handshake, Inbox } from "lucide-react";
@@ -87,6 +88,9 @@ const MOCK_ACCEPTED: Interest[] = [
 
 export default function InterestsPage() {
   const { t } = useTranslation();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const activeTab = searchParams.get("tab") || "received";
   const [received, setReceived] = useState(MOCK_RECEIVED);
   const [sent, setSent] = useState(MOCK_SENT);
   const [accepted, setAccepted] = useState(MOCK_ACCEPTED);
@@ -111,7 +115,7 @@ export default function InterestsPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-neutral-900">{t.interests.title}</h1>
 
-      <Tabs defaultValue="received">
+      <Tabs value={activeTab} onValueChange={(val) => router.replace(`/interests?tab=${val}`)}>
         <TabsList>
           <TabsTrigger value="received">
             <Inbox className="h-4 w-4" />

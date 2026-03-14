@@ -56,6 +56,9 @@ const profileSchema = new Schema(
     employer: String,
     annualIncome: String,
     workLocation: String,
+    city: String,
+    state: String,
+    country: { type: String, default: "India" },
     // Lifestyle
     diet: { type: String, enum: ["vegetarian", "non_vegetarian", "eggetarian"], default: "vegetarian" },
     smoking: { type: String, enum: ["no", "occasionally", "yes"], default: "no" },

@@ -23,7 +23,7 @@ import {
   Eye,
   ArrowUpDown,
 } from "lucide-react";
-import { COMMUNITIES, OCCUPATIONS, EDUCATION_LEVELS, HEIGHT_OPTIONS, MOTHER_TONGUES, NAKSHATRAS, INCOME_RANGES } from "@/lib/constants";
+import { COMMUNITIES, OCCUPATIONS, EDUCATION_LEVELS, HEIGHT_OPTIONS, MOTHER_TONGUES, NAKSHATRAS, INCOME_RANGES, STATES, STATE_CITIES } from "@/lib/constants";
 import { useTranslation } from "@/lib/i18n";
 import type { MatchCard } from "@/types";
 import { cn } from "@/lib/utils";
@@ -268,7 +268,8 @@ interface FilterState {
   motherTongue: string;
   education: string;
   occupation: string;
-  location: string;
+  state: string;
+  city: string;
   income: string;
   maritalStatus: Set<string>;
   diet: Set<string>;
@@ -290,7 +291,8 @@ const defaultFilters: FilterState = {
   motherTongue: "",
   education: "",
   occupation: "",
-  location: "",
+  state: "",
+  city: "",
   income: "",
   maritalStatus: new Set(),
   diet: new Set(),
@@ -323,7 +325,8 @@ export default function SearchPage() {
     filters.motherTongue,
     filters.education,
     filters.occupation,
-    filters.location,
+    filters.state,
+    filters.city,
     filters.income,
     filters.heightMin,
     filters.heightMax,
@@ -1034,11 +1037,26 @@ function FilterPanel({
       </FilterSection>
 
       {/* ─── Location ─── */}
-      <FilterSection title="Location" id="location" expanded={expandedSections.has("location")} onToggle={toggleSection}>
-        <Input
-          placeholder="City or state"
-          value={filters.location}
-          onChange={(e) => setFilters((p) => ({ ...p, location: e.target.value }))}
+      <FilterSection title="State" id="state" expanded={expandedSections.has("state")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any state"
+          value={filters.state || undefined}
+          onValueChange={(v) => setFilters((p) => ({ ...p, state: v, city: "" }))}
+          options={STATES.map((s) => ({ value: s, label: s }))}
+        />
+      </FilterSection>
+
+      <FilterSection title="City" id="city" expanded={expandedSections.has("city")} onToggle={toggleSection}>
+        <Select
+          placeholder={filters.state ? "Select city" : "Select state first"}
+          value={filters.city || undefined}
+          onValueChange={(v) => setFilters((p) => ({ ...p, city: v }))}
+          options={
+            filters.state && STATE_CITIES[filters.state]
+              ? STATE_CITIES[filters.state].map((c) => ({ value: c, label: c }))
+              : []
+          }
+          disabled={!filters.state}
         />
       </FilterSection>
 

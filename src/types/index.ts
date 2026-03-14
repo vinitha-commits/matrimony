@@ -67,6 +67,9 @@ export interface Profile {
   employer?: string;
   annualIncome?: string;
   workLocation: string;
+  city: string;
+  state: string;
+  country: string;
   // Step 4 — Lifestyle & About
   diet: Diet;
   smoking: "no" | "occasionally" | "yes";

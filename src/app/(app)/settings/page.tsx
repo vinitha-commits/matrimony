@@ -1,11 +1,19 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { Button, Input, Card, Switch, Tabs, TabsList, TabsTrigger, TabsContent, RadioGroup } from "@/components/ui";
 import { User, Shield, Bell, CreditCard, HelpCircle, AlertTriangle } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 
 export default function SettingsPage() {
   const { t } = useTranslation();
+  const [saved, setSaved] = useState(false);
+
+  const showSaved = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
 
   return (
     <div className="space-y-6">
@@ -30,13 +38,14 @@ export default function SettingsPage() {
             <Input label={t.settings.phone} defaultValue="+91 98XXXXX34" disabled hint={t.profile.contactSupport} />
             <Input label={t.settings.email} defaultValue="priya@email.com" />
             <Input label={t.settings.password} type="password" defaultValue="••••••••" />
-            <Button variant="primary" size="md">{t.common.save}</Button>
+            {saved && <p className="text-sm text-success font-medium">Settings saved!</p>}
+            <Button variant="primary" size="md" onClick={showSaved}>{t.common.save}</Button>
           </Card>
 
           <Card variant="flat" padding="lg" className="mt-6">
             <h3 className="text-base font-semibold text-neutral-900 mb-4">{t.settings.linkedParent}</h3>
             <p className="text-sm text-neutral-500">{t.settings.noParentLinked}</p>
-            <Button variant="secondary" size="sm" className="mt-3">{t.settings.inviteParent}</Button>
+            <Button variant="secondary" size="sm" className="mt-3" onClick={() => alert("Invitation link sent! Share it with your parent/guardian.")}>{t.settings.inviteParent}</Button>
           </Card>
 
           <Card variant="flat" padding="lg" className="mt-6 border-error/20">
@@ -44,8 +53,8 @@ export default function SettingsPage() {
               <AlertTriangle className="h-4 w-4" /> {t.settings.dangerZone}
             </h3>
             <div className="mt-4 flex flex-wrap gap-3">
-              <Button variant="ghost" size="sm">{t.settings.deactivateProfile}</Button>
-              <Button variant="destructive" size="sm">{t.settings.deleteAccount}</Button>
+              <Button variant="ghost" size="sm" onClick={() => alert("Profile deactivated. You can reactivate anytime by logging in.")}>{t.settings.deactivateProfile}</Button>
+              <Button variant="destructive" size="sm" onClick={() => { if (confirm("Are you sure? This action cannot be undone.")) alert("Account deletion request submitted. Your data will be removed within 30 days."); }}>{t.settings.deleteAccount}</Button>
             </div>
           </Card>
         </TabsContent>
@@ -87,7 +96,7 @@ export default function SettingsPage() {
             />
 
             <div>
-              <Button variant="ghost" size="sm">{t.settings.manageBlocked}</Button>
+              <Button variant="ghost" size="sm" onClick={() => alert("No blocked users. You can block users from their profile page.")}>{t.settings.manageBlocked}</Button>
             </div>
           </Card>
         </TabsContent>
@@ -136,7 +145,7 @@ export default function SettingsPage() {
               </div>
             </div>
             <Button variant="premium" size="md" className="mt-6" asChild>
-              <a href="/premium">{t.nav.upgradePremium}</a>
+              <Link href="/premium">{t.nav.upgradePremium}</Link>
             </Button>
           </Card>
         </TabsContent>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Button, Card, Progress, Badge, Tabs, TabsList, TabsTrigger, TabsContent, EmptyState } from "@/components/ui";
 import { ProfileCard, InterestCard } from "@/components/domain";
@@ -127,6 +128,16 @@ const PARENT_SHORTLISTED: MatchCard[] = [
 
 export default function ParentDashboardPage() {
   const { t } = useTranslation();
+  const [interests, setInterests] = useState(PARENT_INTERESTS);
+
+  const handleAccept = (id: string) => {
+    setInterests((prev) => prev.filter((i) => i.id !== id));
+    alert("Interest accepted! You can now chat with this match.");
+  };
+
+  const handleDecline = (id: string) => {
+    setInterests((prev) => prev.filter((i) => i.id !== id));
+  };
 
   return (
     <div className="space-y-8">
@@ -201,13 +212,14 @@ export default function ParentDashboardPage() {
 
         <TabsContent value="interests">
           <div className="space-y-3">
-            {PARENT_INTERESTS.map((interest) => (
+            {interests.length === 0 && <p className="text-sm text-neutral-500 text-center py-8">No pending interests.</p>}
+            {interests.map((interest) => (
               <InterestCard
                 key={interest.id}
                 interest={interest}
                 type="received"
-                onAccept={() => {}}
-                onDecline={() => {}}
+                onAccept={() => handleAccept(interest.id)}
+                onDecline={() => handleDecline(interest.id)}
               />
             ))}
           </div>

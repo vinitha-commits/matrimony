@@ -1,10 +1,10 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button, Badge, Tabs, TabsList, TabsTrigger, TabsContent, Card } from "@/components/ui";
-import { MatchScore, VerifiedBadge, ProfileCard } from "@/components/domain";
+import { MatchScore, VerifiedBadge, ProfileCard, PremiumUpsell } from "@/components/domain";
 import {
   Heart,
   Share2,
@@ -15,8 +15,14 @@ import {
   GraduationCap,
   Star,
   ArrowLeft,
+  Check,
+  Lock,
+  Phone,
+  Mail,
+  MessageSquare,
 } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function ProfileViewPage({
   params,
@@ -25,6 +31,11 @@ export default function ProfileViewPage({
 }) {
   const { id } = use(params);
   const { t } = useTranslation();
+  const [interestSent, setInterestSent] = useState(false);
+  const [isShortlisted, setIsShortlisted] = useState(false);
+  const [reported, setReported] = useState(false);
+  const [blocked, setBlocked] = useState(false);
+  const { isPremium } = useCurrentUser();
 
   return (
     <div className="space-y-6">
@@ -86,13 +97,35 @@ export default function ProfileViewPage({
 
           {/* Action buttons */}
           <div className="flex flex-wrap gap-3">
-            <Button variant="primary" size="lg">
-              <Heart className="h-5 w-5" /> {t.profile.expressInterest}
+            <Button
+              variant={interestSent ? "secondary" : "primary"}
+              size="lg"
+              onClick={() => setInterestSent(true)}
+              disabled={interestSent}
+            >
+              {interestSent ? <Check className="h-5 w-5" /> : <Heart className="h-5 w-5" />}
+              {interestSent ? "Interest Sent" : t.profile.expressInterest}
             </Button>
-            <Button variant="secondary" size="lg">
-              <Heart className="h-5 w-5" /> {t.profile.shortlistLabel}
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => setIsShortlisted(!isShortlisted)}
+            >
+              <Heart className="h-5 w-5" fill={isShortlisted ? "currentColor" : "none"} />
+              {isShortlisted ? "Shortlisted" : t.profile.shortlistLabel}
             </Button>
-            <Button variant="ghost" size="lg">
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({ title: "Check this profile", url: window.location.href });
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert("Profile link copied to clipboard!");
+                }
+              }}
+            >
               <Share2 className="h-5 w-5" /> {t.profile.shareWithParent}
             </Button>
           </div>
@@ -113,6 +146,71 @@ export default function ProfileViewPage({
                 { label: "Education", matched: false },
               ]}
             />
+          </Card>
+
+          {/* Contact Details — Premium Only */}
+          <Card variant="flat" padding="lg">
+            <h3 className="text-sm font-semibold text-neutral-500 uppercase tracking-wider mb-4">
+              Contact Details
+            </h3>
+            {isPremium ? (
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-50">
+                    <Phone className="h-4 w-4 text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500">Phone</p>
+                    <p className="text-sm font-medium text-neutral-900">+91 98765 43210</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-50">
+                    <Mail className="h-4 w-4 text-primary-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-neutral-500">Email</p>
+                    <p className="text-sm font-medium text-neutral-900">anjali.r@email.com</p>
+                  </div>
+                </div>
+                <Button variant="primary" size="sm" className="mt-2 w-full" asChild>
+                  <Link href="/chat/conv-1">
+                    <MessageSquare className="h-4 w-4" /> Chat Now
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <div className="relative">
+                <div className="space-y-3 select-none blur-sm pointer-events-none">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100">
+                      <Phone className="h-4 w-4 text-neutral-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-400">Phone</p>
+                      <p className="text-sm font-medium text-neutral-400">+91 XXXXX XXXXX</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100">
+                      <Mail className="h-4 w-4 text-neutral-400" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-neutral-400">Email</p>
+                      <p className="text-sm font-medium text-neutral-400">xxxxx@email.com</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <Lock className="h-6 w-6 text-primary-600 mb-2" />
+                  <p className="text-sm font-semibold text-neutral-900">Premium Feature</p>
+                  <p className="text-xs text-neutral-500 mt-0.5">Upgrade to view contact details & chat</p>
+                  <Button variant="premium" size="sm" className="mt-3" asChild>
+                    <Link href="/premium">Upgrade to Premium</Link>
+                  </Button>
+                </div>
+              </div>
+            )}
           </Card>
         </div>
       </div>
@@ -216,11 +314,19 @@ export default function ProfileViewPage({
 
       {/* Report/Block */}
       <div className="flex items-center justify-center gap-6 pt-4 text-sm">
-        <button className="flex items-center gap-1 text-neutral-400 hover:text-error transition-colors">
-          <Flag className="h-4 w-4" /> {t.profile.reportProfile}
+        <button
+          onClick={() => { setReported(true); alert("Profile reported. Our team will review it within 24 hours."); }}
+          disabled={reported}
+          className="flex items-center gap-1 text-neutral-400 hover:text-error transition-colors disabled:opacity-50"
+        >
+          <Flag className="h-4 w-4" /> {reported ? "Reported" : t.profile.reportProfile}
         </button>
-        <button className="flex items-center gap-1 text-neutral-400 hover:text-error transition-colors">
-          <Ban className="h-4 w-4" /> {t.profile.blockPerson}
+        <button
+          onClick={() => { setBlocked(true); alert("User blocked. They can no longer see your profile."); }}
+          disabled={blocked}
+          className="flex items-center gap-1 text-neutral-400 hover:text-error transition-colors disabled:opacity-50"
+        >
+          <Ban className="h-4 w-4" /> {blocked ? "Blocked" : t.profile.blockPerson}
         </button>
       </div>
     </div>

@@ -93,10 +93,17 @@ export default function HoroscopeMatchPage({
 
       {/* Actions */}
       <div className="flex justify-center gap-3">
-        <Button variant="ghost" disabled>
+        <Button variant="ghost" onClick={() => alert("Horoscope PDF download started!")}>
           <Download className="h-4 w-4" /> {t.horoscope.downloadPdf}
         </Button>
-        <Button variant="ghost" disabled>
+        <Button variant="ghost" onClick={() => {
+          if (navigator.share) {
+            navigator.share({ title: "Horoscope Match Report", url: window.location.href });
+          } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Link copied to clipboard!");
+          }
+        }}>
           <Share2 className="h-4 w-4" /> {t.horoscope.share}
         </Button>
         <Button variant="secondary" asChild>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Button, Card, Badge, Progress, Tabs, TabsList, TabsTrigger, TabsContent, Input } from "@/components/ui";
 import { Textarea } from "@/components/ui";
@@ -9,6 +10,12 @@ import { useTranslation } from "@/lib/i18n";
 
 export default function MyProfilePage() {
   const { t } = useTranslation();
+  const [saved, setSaved] = useState<string | null>(null);
+
+  const handleSave = (section: string) => {
+    setSaved(section);
+    setTimeout(() => setSaved(null), 2000);
+  };
 
   return (
     <div className="space-y-6">
@@ -76,7 +83,8 @@ export default function MyProfilePage() {
             <Input label={t.profile.motherTongue} defaultValue="Tamil" disabled />
             <Input label={t.profile.communityLabel} defaultValue="Brahmin - Iyer" disabled />
             <Input label={t.profile.maritalStatus} defaultValue={t.profile.neverMarried} disabled hint={t.profile.contactSupport} />
-            <Button variant="primary" size="md">{t.common.save}</Button>
+            {saved === "basic" && <p className="text-sm text-success font-medium">Basic info saved successfully!</p>}
+            <Button variant="primary" size="md" onClick={() => handleSave("basic")}>{t.common.save}</Button>
           </Card>
         </TabsContent>
 
@@ -89,7 +97,8 @@ export default function MyProfilePage() {
             <Input label={t.profile.familyType} defaultValue="Nuclear" />
             <Input label={t.profile.fatherOccupation} defaultValue="Retired Government Officer" />
             <Input label={t.profile.motherOccupation} defaultValue="Homemaker" />
-            <Button variant="primary" size="md">{t.common.save}</Button>
+            {saved === "family" && <p className="text-sm text-success font-medium">Family details saved successfully!</p>}
+            <Button variant="primary" size="md" onClick={() => handleSave("family")}>{t.common.save}</Button>
           </Card>
         </TabsContent>
 
@@ -101,7 +110,8 @@ export default function MyProfilePage() {
             <Input label={t.profile.employer} defaultValue="Infosys" />
             <Input label={t.profile.annualIncome} defaultValue="8-10 Lakhs" />
             <Input label={t.profile.workLocation} defaultValue="Chennai" />
-            <Button variant="primary" size="md">{t.common.save}</Button>
+            {saved === "career" && <p className="text-sm text-success font-medium">Career details saved successfully!</p>}
+            <Button variant="primary" size="md" onClick={() => handleSave("career")}>{t.common.save}</Button>
           </Card>
         </TabsContent>
 
@@ -127,7 +137,8 @@ export default function MyProfilePage() {
                 ))}
               </div>
             </div>
-            <Button variant="primary" size="md">{t.common.save}</Button>
+            {saved === "about" && <p className="text-sm text-success font-medium">About section saved successfully!</p>}
+            <Button variant="primary" size="md" onClick={() => handleSave("about")}>{t.common.save}</Button>
           </Card>
         </TabsContent>
 
@@ -143,7 +154,8 @@ export default function MyProfilePage() {
             <Input label={t.profile.locations} defaultValue="Chennai, Bangalore" />
             <Input label={t.profile.starCompatibility} defaultValue="Preferred" />
             <Input label={t.profile.diet} defaultValue="Vegetarian" />
-            <Button variant="primary" size="md">{t.profile.savePreferences}</Button>
+            {saved === "preferences" && <p className="text-sm text-success font-medium">Preferences saved successfully!</p>}
+            <Button variant="primary" size="md" onClick={() => handleSave("preferences")}>{t.profile.savePreferences}</Button>
           </Card>
         </TabsContent>
       </Tabs>

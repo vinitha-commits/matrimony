@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent, EmptyState, Badge } from "@/components/ui";
 import { InterestCard } from "@/components/domain";
 import { Heart, Send, Handshake, Inbox } from "lucide-react";
@@ -86,6 +87,25 @@ const MOCK_ACCEPTED: Interest[] = [
 
 export default function InterestsPage() {
   const { t } = useTranslation();
+  const [received, setReceived] = useState(MOCK_RECEIVED);
+  const [sent, setSent] = useState(MOCK_SENT);
+  const [accepted, setAccepted] = useState(MOCK_ACCEPTED);
+
+  const handleAccept = (id: string) => {
+    const item = received.find((i) => i.id === id);
+    if (item) {
+      setReceived((prev) => prev.filter((i) => i.id !== id));
+      setAccepted((prev) => [...prev, { ...item, status: "accepted" as const, respondedAt: new Date().toISOString() }]);
+    }
+  };
+
+  const handleDecline = (id: string) => {
+    setReceived((prev) => prev.filter((i) => i.id !== id));
+  };
+
+  const handleWithdraw = (id: string) => {
+    setSent((prev) => prev.filter((i) => i.id !== id));
+  };
 
   return (
     <div className="space-y-6">
@@ -112,13 +132,14 @@ export default function InterestsPage() {
 
         <TabsContent value="received">
           <div className="space-y-3">
-            {MOCK_RECEIVED.map((interest) => (
+            {received.length === 0 && <p className="text-sm text-neutral-500 text-center py-8">No pending interests.</p>}
+            {received.map((interest) => (
               <InterestCard
                 key={interest.id}
                 interest={interest}
                 type="received"
-                onAccept={() => {}}
-                onDecline={() => {}}
+                onAccept={() => handleAccept(interest.id)}
+                onDecline={() => handleDecline(interest.id)}
               />
             ))}
           </div>
@@ -126,12 +147,13 @@ export default function InterestsPage() {
 
         <TabsContent value="sent">
           <div className="space-y-3">
-            {MOCK_SENT.map((interest) => (
+            {sent.length === 0 && <p className="text-sm text-neutral-500 text-center py-8">No sent interests.</p>}
+            {sent.map((interest) => (
               <InterestCard
                 key={interest.id}
                 interest={interest}
                 type="sent"
-                onWithdraw={() => {}}
+                onWithdraw={() => handleWithdraw(interest.id)}
               />
             ))}
           </div>
@@ -139,7 +161,8 @@ export default function InterestsPage() {
 
         <TabsContent value="accepted">
           <div className="space-y-3">
-            {MOCK_ACCEPTED.map((interest) => (
+            {accepted.length === 0 && <p className="text-sm text-neutral-500 text-center py-8">No accepted interests yet.</p>}
+            {accepted.map((interest) => (
               <InterestCard
                 key={interest.id}
                 interest={interest}

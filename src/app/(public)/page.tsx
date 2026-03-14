@@ -244,9 +244,12 @@ export default function LandingPage() {
 
               {/* Button */}
               <div>
-                <button className="w-full bg-[#b40000] hover:bg-[#8f0000] text-white font-semibold py-3 rounded-lg shadow-md">
+                <Link
+                  href="/search"
+                  className="block w-full bg-[#b40000] hover:bg-[#8f0000] text-white font-semibold py-3 rounded-lg shadow-md text-center"
+                >
                   {t.common.search}
-                </button>
+                </Link>
               </div>
 
             </div>
@@ -259,7 +262,7 @@ export default function LandingPage() {
 
       {/* HOW IT WORKS */}
 
-      <section className="py-20 bg-[#f8fafc]">
+      <section id="how-it-works" className="py-20 bg-[#f8fafc]">
 
         <div className="max-w-6xl mx-auto px-4 text-center">
 
@@ -486,7 +489,7 @@ export default function LandingPage() {
           <div className="text-center mt-8">
 
             <Link
-              href="/profiles"
+              href="/search"
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded shadow"
             >
               {t.common.viewAll}
@@ -616,7 +619,7 @@ export default function LandingPage() {
         <div className="text-center mt-8">
 
           <Link
-            href="/profiles"
+            href="/search"
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded shadow"
           >
             {t.common.viewAll}
@@ -626,7 +629,7 @@ export default function LandingPage() {
       </section>
       {/* SUCCESS STORIES */}
 
-      <section className="bg-white py-16">
+      <section id="success-stories" className="bg-white py-16">
 
         <div className="max-w-[1280px] mx-auto px-4">
 

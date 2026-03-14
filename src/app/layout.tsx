@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { TooltipProvider } from "@/components/ui";
 import { ToastProvider, ToastViewport } from "@/components/ui";
 import { I18nProvider } from "@/components/providers/i18n-provider";
+import { SessionProvider } from "@/components/providers/session-provider";
 import { FloatingLanguageSwitcher } from "@/components/layout/language-switcher";
 import "./globals.css";
 
@@ -40,15 +41,17 @@ export default function RootLayout({
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
-        <I18nProvider>
-          <TooltipProvider>
-            <ToastProvider swipeDirection="right">
-              {children}
-              <FloatingLanguageSwitcher />
-              <ToastViewport />
-            </ToastProvider>
-          </TooltipProvider>
-        </I18nProvider>
+        <SessionProvider>
+          <I18nProvider>
+            <TooltipProvider>
+              <ToastProvider swipeDirection="right">
+                {children}
+                <FloatingLanguageSwitcher />
+                <ToastViewport />
+              </ToastProvider>
+            </TooltipProvider>
+          </I18nProvider>
+        </SessionProvider>
       </body>
     </html>
   );

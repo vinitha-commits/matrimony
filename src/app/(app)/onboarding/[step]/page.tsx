@@ -57,7 +57,7 @@ export default function OnboardingStepPage({
             )}
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm">Save Draft</Button>
+            <Button variant="ghost" size="sm" onClick={() => alert("Draft saved successfully!")}>Save Draft</Button>
             <Button variant="primary" size="md" asChild>
               <Link href={isLast ? "/dashboard" : `/onboarding/${step + 1}`}>
                 {isLast ? "Complete Profile" : "Save & Continue \u2192"}

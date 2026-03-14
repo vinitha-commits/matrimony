@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Button,
   Badge,
@@ -17,6 +18,7 @@ import { useTranslation } from "@/lib/i18n";
 
 export default function PremiumPage() {
   const [selectedPlan, setSelectedPlan] = useState<string>("premium_6");
+  const router = useRouter();
   const { t } = useTranslation();
 
   const FEATURES = [
@@ -59,6 +61,19 @@ export default function PremiumPage() {
             onSelect={setSelectedPlan}
           />
         ))}
+      </div>
+
+      {/* Proceed button */}
+      <div className="text-center">
+        <Button
+          variant="primary"
+          size="lg"
+          className="px-12 text-base"
+          onClick={() => router.push(`/checkout?plan=${selectedPlan}`)}
+        >
+          Proceed to Pay — &#8377;{(PREMIUM_PLANS.find((p) => p.id === selectedPlan)?.totalPrice || 0).toLocaleString("en-IN")}
+        </Button>
+        <p className="mt-2 text-xs text-neutral-400">Secure payment via Razorpay &middot; UPI &amp; Cards accepted</p>
       </div>
 
       {/* Feature comparison */}

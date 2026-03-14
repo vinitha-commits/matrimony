@@ -111,7 +111,7 @@ export default function AdminSettingsPage() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={() => alert("Password change email sent to your admin email address.")}>
               Change Password
             </Button>
           </CardFooter>

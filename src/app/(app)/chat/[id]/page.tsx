@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { Avatar, Button } from "@/components/ui";
 import { ChatBubble, ChatInput } from "@/components/domain";
@@ -29,6 +29,21 @@ export default function ChatThreadPage({
 }) {
   const { id } = use(params);
   const { t } = useTranslation();
+  const [messages, setMessages] = useState(MOCK_MESSAGES);
+
+  const handleSend = (text: string) => {
+    const newMsg: ChatMessage = {
+      id: `m-${Date.now()}`,
+      conversationId: `conv-${id}`,
+      senderId: "me",
+      content: text,
+      type: "text",
+      sentAt: new Date().toISOString(),
+      isRead: false,
+      status: "sent",
+    };
+    setMessages((prev) => [...prev, newMsg]);
+  };
 
   return (
     <div className="flex flex-col h-[calc(100dvh-64px-56px)] lg:h-[calc(100dvh-64px)] -mx-4 -my-6 md:-mx-6 lg:-mx-8">
@@ -44,7 +59,7 @@ export default function ChatThreadPage({
           </Link>
           <p className="text-xs text-success">{t.common.onlineNow}</p>
         </div>
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" onClick={() => alert("Voice calls coming soon!")}>
           <Phone className="h-5 w-5 text-neutral-500" />
         </Button>
         <Button variant="ghost" size="icon">
@@ -54,7 +69,7 @@ export default function ChatThreadPage({
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto bg-bg-secondary px-4 py-4 space-y-3">
-        {MOCK_MESSAGES.map((msg) => (
+        {messages.map((msg) => (
           <ChatBubble
             key={msg.id}
             message={msg}
@@ -64,7 +79,7 @@ export default function ChatThreadPage({
       </div>
 
       {/* Input */}
-      <ChatInput onSend={() => {}} />
+      <ChatInput onSend={handleSend} />
     </div>
   );
 }

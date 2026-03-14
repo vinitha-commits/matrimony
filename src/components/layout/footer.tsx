@@ -40,10 +40,15 @@ export function PublicFooter() {
           <div>
             <h4 className="text-sm font-semibold text-neutral-800 mb-3">Company</h4>
             <ul className="space-y-2">
-              {["About Us", "Success Stories", "Blog", "Careers"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sm text-neutral-500 hover:text-primary-600 transition-colors">
-                    {item}
+              {[
+                { label: "About Us", href: "/how-it-works" },
+                { label: "Success Stories", href: "/success-stories" },
+                { label: "Blog", href: "/success-stories" },
+                { label: "Careers", href: "/how-it-works" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-neutral-500 hover:text-primary-600 transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -53,10 +58,15 @@ export function PublicFooter() {
           <div>
             <h4 className="text-sm font-semibold text-neutral-800 mb-3">Support</h4>
             <ul className="space-y-2">
-              {["Help Center", "Contact Us", "Safety Tips", "Report Abuse"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sm text-neutral-500 hover:text-primary-600 transition-colors">
-                    {item}
+              {[
+                { label: "Help Center", href: "/help" },
+                { label: "Contact Us", href: "/help" },
+                { label: "Safety Tips", href: "/help" },
+                { label: "Report Abuse", href: "/help" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-neutral-500 hover:text-primary-600 transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -66,10 +76,15 @@ export function PublicFooter() {
           <div>
             <h4 className="text-sm font-semibold text-neutral-800 mb-3">Legal</h4>
             <ul className="space-y-2">
-              {["Privacy Policy", "Terms of Service", "Cookie Policy", "Refund Policy"].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sm text-neutral-500 hover:text-primary-600 transition-colors">
-                    {item}
+              {[
+                { label: "Privacy Policy", href: "/privacy" },
+                { label: "Terms of Service", href: "/terms" },
+                { label: "Cookie Policy", href: "/privacy" },
+                { label: "Refund Policy", href: "/terms" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm text-neutral-500 hover:text-primary-600 transition-colors">
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -89,11 +104,11 @@ export function MinimalFooter() {
   return (
     <footer className="border-t border-neutral-200 bg-white py-4">
       <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-center gap-4 px-4 text-xs text-neutral-400">
-        <Link href="#" className="hover:text-neutral-600 transition-colors">Help</Link>
+        <Link href="/help" className="hover:text-neutral-600 transition-colors">Help</Link>
         <span>&middot;</span>
-        <Link href="#" className="hover:text-neutral-600 transition-colors">Privacy</Link>
+        <Link href="/privacy" className="hover:text-neutral-600 transition-colors">Privacy</Link>
         <span>&middot;</span>
-        <Link href="#" className="hover:text-neutral-600 transition-colors">Terms</Link>
+        <Link href="/terms" className="hover:text-neutral-600 transition-colors">Terms</Link>
         <span>&middot;</span>
         <span>&copy; {new Date().getFullYear()} Thirumangalyam</span>
       </div>

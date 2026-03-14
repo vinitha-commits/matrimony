@@ -36,7 +36,7 @@ export function Sidebar({ profileCompletion = 75, isPremium = false }: SidebarPr
     { section: t.nav.more },
     { href: "/shortlist", label: t.nav.shortlist, icon: Bookmark, badge: 7 },
     { href: "/who-viewed-me", label: t.nav.viewedMe, icon: Eye, badge: 15 },
-    { href: "/horoscope-match", label: t.nav.horoscopeMatch, icon: Star },
+    { href: "/search", label: t.nav.horoscopeMatch, icon: Star },
     { section: t.nav.account },
     { href: "/settings", label: t.nav.settings, icon: Settings },
   ] as const;

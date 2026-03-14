@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { Avatar, Badge, EmptyState } from "@/components/ui";
+import { PremiumUpsell } from "@/components/domain";
 import { MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "@/lib/i18n";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 const MOCK_CONVERSATIONS = [
   {
@@ -60,6 +62,8 @@ const MOCK_CONVERSATIONS = [
 export default function ChatListPage() {
   const { t } = useTranslation();
 
+  const { isPremium } = useCurrentUser();
+
   if (MOCK_CONVERSATIONS.length === 0) {
     return (
       <EmptyState
@@ -75,14 +79,19 @@ export default function ChatListPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-neutral-900">{t.chat.title}</h1>
 
+      {!isPremium && (
+        <PremiumUpsell feature="chat" />
+      )}
+
       <div className="rounded-[var(--radius-lg)] border border-neutral-200 bg-white overflow-hidden divide-y divide-neutral-200">
-        {MOCK_CONVERSATIONS.map((conv) => (
+        {MOCK_CONVERSATIONS.map((conv, i) => (
           <Link
             key={conv.id}
-            href={`/chat/${conv.id}`}
+            href={isPremium ? `/chat/${conv.id}` : "/premium"}
             className={cn(
-              "flex items-center gap-4 px-4 py-3 hover:bg-neutral-50 transition-colors",
-              conv.unread > 0 && "bg-primary-50/30"
+              "flex items-center gap-4 px-4 py-3 transition-colors relative",
+              conv.unread > 0 && isPremium && "bg-primary-50/30",
+              isPremium ? "hover:bg-neutral-50" : i >= 1 ? "opacity-50 pointer-events-auto" : "hover:bg-neutral-50"
             )}
           >
             <Avatar name={conv.name} size="lg" showOnline={conv.isOnline} />
@@ -99,14 +108,20 @@ export default function ChatListPage() {
               <div className="flex items-center justify-between mt-0.5">
                 <p className={cn(
                   "text-sm truncate",
+                  !isPremium && i >= 1 ? "blur-sm select-none" : "",
                   conv.unread > 0 ? "text-neutral-800 font-medium" : "text-neutral-500"
                 )}>
                   {conv.lastMessage}
                 </p>
-                {conv.unread > 0 && (
+                {conv.unread > 0 && isPremium && (
                   <span className="ml-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-600 px-1.5 text-[10px] font-bold text-white">
                     {conv.unread}
                   </span>
+                )}
+                {!isPremium && i >= 1 && (
+                  <Badge variant="outline" size="sm" className="ml-2 shrink-0">
+                    <MessageSquare className="h-3 w-3" /> Premium
+                  </Badge>
                 )}
               </div>
             </div>

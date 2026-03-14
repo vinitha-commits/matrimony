@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { Bell, MessageSquare, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Avatar, Badge } from "@/components/ui";
@@ -117,7 +118,7 @@ export function AppHeader({
                 <Link href="/settings">{t.nav.settings}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-error">{t.nav.logout}</DropdownMenuItem>
+              <DropdownMenuItem className="text-error cursor-pointer" onClick={() => signOut({ callbackUrl: "/login" })}>{t.nav.logout}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

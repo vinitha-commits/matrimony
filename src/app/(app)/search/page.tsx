@@ -940,14 +940,20 @@ function FilterPanel({
     <div className="space-y-1">
       {/* ─── Basic ─── */}
       <FilterSection title="Age Range" id="age" expanded={expandedSections.has("age")} onToggle={toggleSection}>
-        <Slider
-          min={18}
-          max={60}
-          step={1}
-          value={filters.ageRange}
-          onValueChange={(v) => setFilters((p) => ({ ...p, ageRange: v as [number, number] }))}
-          formatValue={(v) => `${v} yrs`}
-        />
+        <div className="grid grid-cols-2 gap-2">
+          <Select
+            placeholder="From"
+            value={String(filters.ageRange[0])}
+            onValueChange={(v) => setFilters((p) => ({ ...p, ageRange: [Number(v), Math.max(Number(v), p.ageRange[1])] }))}
+            options={Array.from({ length: 43 }, (_, i) => ({ value: String(18 + i), label: `${18 + i} yrs` }))}
+          />
+          <Select
+            placeholder="To"
+            value={String(filters.ageRange[1])}
+            onValueChange={(v) => setFilters((p) => ({ ...p, ageRange: [Math.min(p.ageRange[0], Number(v)), Number(v)] }))}
+            options={Array.from({ length: 43 }, (_, i) => ({ value: String(18 + i), label: `${18 + i} yrs` }))}
+          />
+        </div>
       </FilterSection>
 
       <FilterSection title="Height" id="height" expanded={expandedSections.has("height")} onToggle={toggleSection}>

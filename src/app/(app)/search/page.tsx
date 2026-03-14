@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Button, Input, Select, Slider, Badge, Card, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui";
+import { Button, Input, Select, Slider, Badge, Card, Tabs, TabsList, TabsTrigger, TabsContent, Checkbox } from "@/components/ui";
 import {
   SlidersHorizontal,
   X,
@@ -23,7 +23,7 @@ import {
   Eye,
   ArrowUpDown,
 } from "lucide-react";
-import { COMMUNITIES, OCCUPATIONS, EDUCATION_LEVELS, HEIGHT_OPTIONS } from "@/lib/constants";
+import { COMMUNITIES, OCCUPATIONS, EDUCATION_LEVELS, HEIGHT_OPTIONS, MOTHER_TONGUES, NAKSHATRAS, INCOME_RANGES } from "@/lib/constants";
 import { useTranslation } from "@/lib/i18n";
 import type { MatchCard } from "@/types";
 import { cn } from "@/lib/utils";
@@ -233,6 +233,77 @@ const QUICK_FILTERS = [
   { label: "Premium", value: "premium" },
 ];
 
+const MARITAL_STATUS_OPTIONS = [
+  "Never Married",
+  "Divorced",
+  "Widowed",
+  "Awaiting Divorce",
+];
+
+const DIET_OPTIONS = [
+  "Vegetarian",
+  "Non-Vegetarian",
+  "Eggetarian",
+  "Vegan",
+];
+
+const SMOKING_OPTIONS = ["No", "Occasionally", "Yes"];
+const DRINKING_OPTIONS = ["No", "Occasionally", "Yes"];
+
+const DOSHAM_OPTIONS = [
+  "No Dosham",
+  "Chevvai Dosham",
+  "Rahu-Ketu Dosham",
+  "Don't Know",
+];
+
+const FAMILY_TYPE_OPTIONS = ["Joint Family", "Nuclear Family"];
+const FAMILY_STATUS_OPTIONS = ["Middle Class", "Upper Middle Class", "Rich", "Affluent"];
+
+interface FilterState {
+  ageRange: [number, number];
+  heightMin: string;
+  heightMax: string;
+  community: string;
+  motherTongue: string;
+  education: string;
+  occupation: string;
+  location: string;
+  income: string;
+  maritalStatus: Set<string>;
+  diet: Set<string>;
+  smoking: string;
+  drinking: string;
+  nakshatra: string;
+  dosham: string;
+  familyType: string;
+  familyStatus: string;
+  profileWithPhoto: boolean;
+  profileVerified: boolean;
+}
+
+const defaultFilters: FilterState = {
+  ageRange: [22, 32],
+  heightMin: "",
+  heightMax: "",
+  community: "",
+  motherTongue: "",
+  education: "",
+  occupation: "",
+  location: "",
+  income: "",
+  maritalStatus: new Set(),
+  diet: new Set(),
+  smoking: "",
+  drinking: "",
+  nakshatra: "",
+  dosham: "",
+  familyType: "",
+  familyStatus: "",
+  profileWithPhoto: false,
+  profileVerified: false,
+};
+
 export default function SearchPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [showDesktopFilters, setShowDesktopFilters] = useState(true);
@@ -244,7 +315,29 @@ export default function SearchPage() {
   const [shortlisted, setShortlisted] = useState<Set<string>>(
     new Set(MOCK_RESULTS.filter((m) => m.isShortlisted).map((m) => m.id))
   );
+  const [filters, setFilters] = useState<FilterState>({ ...defaultFilters, maritalStatus: new Set(), diet: new Set() });
   const { t } = useTranslation();
+
+  const activeFilterCount = [
+    filters.community,
+    filters.motherTongue,
+    filters.education,
+    filters.occupation,
+    filters.location,
+    filters.income,
+    filters.heightMin,
+    filters.heightMax,
+    filters.smoking,
+    filters.drinking,
+    filters.nakshatra,
+    filters.dosham,
+    filters.familyType,
+    filters.familyStatus,
+    filters.profileWithPhoto ? "yes" : "",
+    filters.profileVerified ? "yes" : "",
+  ].filter(Boolean).length + filters.maritalStatus.size + filters.diet.size + (filters.ageRange[0] !== 22 || filters.ageRange[1] !== 32 ? 1 : 0);
+
+  const resetFilters = () => setFilters({ ...defaultFilters, maritalStatus: new Set(), diet: new Set() });
 
   const toggleQuickFilter = (value: string) => {
     setActiveQuickFilters((prev) => {
@@ -427,11 +520,18 @@ export default function SearchPage() {
           <aside className="hidden lg:block w-[280px] shrink-0">
             <div className="sticky top-20 rounded-2xl border border-neutral-200 bg-white shadow-sm overflow-hidden">
               <div className="flex items-center justify-between px-5 py-4 border-b border-neutral-100 bg-neutral-50">
-                <h2 className="text-sm font-semibold text-neutral-900">Refine Search</h2>
-                <button className="text-xs text-primary-600 hover:underline font-medium">Reset all</button>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-sm font-semibold text-neutral-900">Refine Search</h2>
+                  {activeFilterCount > 0 && (
+                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-600 px-1 text-[10px] font-bold text-white">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                </div>
+                <button onClick={resetFilters} className="text-xs text-primary-600 hover:underline font-medium">Reset all</button>
               </div>
               <div className="p-5">
-                <FilterPanel />
+                <FilterPanel filters={filters} setFilters={setFilters} onReset={resetFilters} />
               </div>
             </div>
           </aside>
@@ -452,10 +552,10 @@ export default function SearchPage() {
                 </button>
               </div>
               <div className="px-6 py-4">
-                <FilterPanel />
+                <FilterPanel filters={filters} setFilters={setFilters} onReset={resetFilters} />
               </div>
               <div className="sticky bottom-0 bg-white border-t border-neutral-100 px-6 py-4 flex gap-3">
-                <Button variant="ghost" size="md" fullWidth>Clear All</Button>
+                <Button variant="ghost" size="md" fullWidth onClick={resetFilters}>Clear All</Button>
                 <Button variant="primary" size="md" fullWidth onClick={() => setShowFilters(false)}>
                   Show {filtered.length} Results
                 </Button>
@@ -802,12 +902,20 @@ function ListProfileCard({
 }
 
 /* ============================================================
-   Filter Panel
+   Filter Panel — Advanced
    ============================================================ */
-function FilterPanel() {
+function FilterPanel({
+  filters,
+  setFilters,
+  onReset,
+}: {
+  filters: FilterState;
+  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
+  onReset: () => void;
+}) {
   const { t } = useTranslation();
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(["age", "community", "education", "occupation", "location", "height"])
+    new Set(["age", "community", "marital"])
   );
 
   const toggleSection = (section: string) => {
@@ -819,46 +927,236 @@ function FilterPanel() {
     });
   };
 
+  const toggleSetValue = (key: "maritalStatus" | "diet", value: string) => {
+    setFilters((prev) => {
+      const next = new Set(prev[key]);
+      if (next.has(value)) next.delete(value);
+      else next.add(value);
+      return { ...prev, [key]: next };
+    });
+  };
+
   return (
     <div className="space-y-1">
+      {/* ─── Basic ─── */}
       <FilterSection title="Age Range" id="age" expanded={expandedSections.has("age")} onToggle={toggleSection}>
-        <Slider min={18} max={60} step={1} defaultValue={[22, 32]} formatValue={(v) => `${v} yrs`} />
-      </FilterSection>
-
-      <FilterSection title="Community" id="community" expanded={expandedSections.has("community")} onToggle={toggleSection}>
-        <Select
-          placeholder="Any community"
-          options={[{ value: "any", label: "Any" }, ...COMMUNITIES.map((c) => ({ value: c, label: c }))]}
+        <Slider
+          min={18}
+          max={60}
+          step={1}
+          value={filters.ageRange}
+          onValueChange={(v) => setFilters((p) => ({ ...p, ageRange: v as [number, number] }))}
+          formatValue={(v) => `${v} yrs`}
         />
       </FilterSection>
 
+      <FilterSection title="Height" id="height" expanded={expandedSections.has("height")} onToggle={toggleSection}>
+        <div className="grid grid-cols-2 gap-2">
+          <Select
+            placeholder="Min"
+            value={filters.heightMin}
+            onValueChange={(v) => setFilters((p) => ({ ...p, heightMin: v }))}
+            options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
+          />
+          <Select
+            placeholder="Max"
+            value={filters.heightMax}
+            onValueChange={(v) => setFilters((p) => ({ ...p, heightMax: v }))}
+            options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))}
+          />
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Marital Status" id="marital" expanded={expandedSections.has("marital")} onToggle={toggleSection}>
+        <div className="space-y-2">
+          {MARITAL_STATUS_OPTIONS.map((status) => (
+            <Checkbox
+              key={status}
+              label={status}
+              checked={filters.maritalStatus.has(status)}
+              onCheckedChange={() => toggleSetValue("maritalStatus", status)}
+            />
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* ─── Community & Language ─── */}
+      <FilterSection title="Mother Tongue" id="motherTongue" expanded={expandedSections.has("motherTongue")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any language"
+          value={filters.motherTongue}
+          onValueChange={(v) => setFilters((p) => ({ ...p, motherTongue: v }))}
+          options={[{ value: "", label: "Any" }, ...MOTHER_TONGUES.map((l) => ({ value: l, label: l }))]}
+        />
+      </FilterSection>
+
+      <FilterSection title="Community / Caste" id="community" expanded={expandedSections.has("community")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any community"
+          value={filters.community}
+          onValueChange={(v) => setFilters((p) => ({ ...p, community: v }))}
+          options={[{ value: "", label: "Any" }, ...COMMUNITIES.map((c) => ({ value: c, label: c }))]}
+        />
+      </FilterSection>
+
+      {/* ─── Education & Career ─── */}
       <FilterSection title="Education" id="education" expanded={expandedSections.has("education")} onToggle={toggleSection}>
         <Select
           placeholder="Any education"
-          options={EDUCATION_LEVELS.flatMap((g) => g.options.map((o) => ({ value: o, label: o, group: g.group })))}
+          value={filters.education}
+          onValueChange={(v) => setFilters((p) => ({ ...p, education: v }))}
+          options={[
+            { value: "", label: "Any" },
+            ...EDUCATION_LEVELS.flatMap((g) => g.options.map((o) => ({ value: o, label: o, group: g.group }))),
+          ]}
         />
       </FilterSection>
 
       <FilterSection title="Occupation" id="occupation" expanded={expandedSections.has("occupation")} onToggle={toggleSection}>
         <Select
           placeholder="Any occupation"
-          options={OCCUPATIONS.map((o) => ({ value: o, label: o }))}
+          value={filters.occupation}
+          onValueChange={(v) => setFilters((p) => ({ ...p, occupation: v }))}
+          options={[{ value: "", label: "Any" }, ...OCCUPATIONS.map((o) => ({ value: o, label: o }))]}
         />
       </FilterSection>
 
-      <FilterSection title="Location" id="location" expanded={expandedSections.has("location")} onToggle={toggleSection}>
-        <Input placeholder="City or state" />
+      <FilterSection title="Annual Income" id="income" expanded={expandedSections.has("income")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any income"
+          value={filters.income}
+          onValueChange={(v) => setFilters((p) => ({ ...p, income: v }))}
+          options={[{ value: "", label: "Any" }, ...INCOME_RANGES.map((r) => ({ value: r, label: r }))]}
+        />
       </FilterSection>
 
-      <FilterSection title="Height" id="height" expanded={expandedSections.has("height")} onToggle={toggleSection}>
-        <div className="grid grid-cols-2 gap-2">
-          <Select placeholder="Min" options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))} />
-          <Select placeholder="Max" options={HEIGHT_OPTIONS.map((h) => ({ value: h, label: h }))} />
+      {/* ─── Location ─── */}
+      <FilterSection title="Location" id="location" expanded={expandedSections.has("location")} onToggle={toggleSection}>
+        <Input
+          placeholder="City or state"
+          value={filters.location}
+          onChange={(e) => setFilters((p) => ({ ...p, location: e.target.value }))}
+        />
+      </FilterSection>
+
+      {/* ─── Horoscope ─── */}
+      <FilterSection title="Nakshatra (Star)" id="nakshatra" expanded={expandedSections.has("nakshatra")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any nakshatra"
+          value={filters.nakshatra}
+          onValueChange={(v) => setFilters((p) => ({ ...p, nakshatra: v }))}
+          options={[{ value: "", label: "Any" }, ...NAKSHATRAS.map((n) => ({ value: n, label: n }))]}
+        />
+      </FilterSection>
+
+      <FilterSection title="Dosham" id="dosham" expanded={expandedSections.has("dosham")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any"
+          value={filters.dosham}
+          onValueChange={(v) => setFilters((p) => ({ ...p, dosham: v }))}
+          options={[{ value: "", label: "Any" }, ...DOSHAM_OPTIONS.map((d) => ({ value: d, label: d }))]}
+        />
+      </FilterSection>
+
+      {/* ─── Lifestyle ─── */}
+      <FilterSection title="Diet" id="diet" expanded={expandedSections.has("diet")} onToggle={toggleSection}>
+        <div className="space-y-2">
+          {DIET_OPTIONS.map((d) => (
+            <Checkbox
+              key={d}
+              label={d}
+              checked={filters.diet.has(d)}
+              onCheckedChange={() => toggleSetValue("diet", d)}
+            />
+          ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Smoking" id="smoking" expanded={expandedSections.has("smoking")} onToggle={toggleSection}>
+        <div className="flex gap-2">
+          {SMOKING_OPTIONS.map((opt) => (
+            <button
+              key={opt}
+              onClick={() => setFilters((p) => ({ ...p, smoking: p.smoking === opt ? "" : opt }))}
+              className={cn(
+                "flex-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+                filters.smoking === opt
+                  ? "border-primary-500 bg-primary-50 text-primary-700"
+                  : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Drinking" id="drinking" expanded={expandedSections.has("drinking")} onToggle={toggleSection}>
+        <div className="flex gap-2">
+          {DRINKING_OPTIONS.map((opt) => (
+            <button
+              key={opt}
+              onClick={() => setFilters((p) => ({ ...p, drinking: p.drinking === opt ? "" : opt }))}
+              className={cn(
+                "flex-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+                filters.drinking === opt
+                  ? "border-primary-500 bg-primary-50 text-primary-700"
+                  : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </FilterSection>
+
+      {/* ─── Family ─── */}
+      <FilterSection title="Family Type" id="familyType" expanded={expandedSections.has("familyType")} onToggle={toggleSection}>
+        <div className="flex gap-2">
+          {FAMILY_TYPE_OPTIONS.map((opt) => (
+            <button
+              key={opt}
+              onClick={() => setFilters((p) => ({ ...p, familyType: p.familyType === opt ? "" : opt }))}
+              className={cn(
+                "flex-1 rounded-lg border px-3 py-2 text-xs font-medium transition-colors",
+                filters.familyType === opt
+                  ? "border-primary-500 bg-primary-50 text-primary-700"
+                  : "border-neutral-200 text-neutral-600 hover:border-neutral-300"
+              )}
+            >
+              {opt}
+            </button>
+          ))}
+        </div>
+      </FilterSection>
+
+      <FilterSection title="Family Status" id="familyStatus" expanded={expandedSections.has("familyStatus")} onToggle={toggleSection}>
+        <Select
+          placeholder="Any"
+          value={filters.familyStatus}
+          onValueChange={(v) => setFilters((p) => ({ ...p, familyStatus: v }))}
+          options={[{ value: "", label: "Any" }, ...FAMILY_STATUS_OPTIONS.map((s) => ({ value: s, label: s }))]}
+        />
+      </FilterSection>
+
+      {/* ─── Profile Attributes ─── */}
+      <FilterSection title="Profile Preferences" id="profilePrefs" expanded={expandedSections.has("profilePrefs")} onToggle={toggleSection}>
+        <div className="space-y-2">
+          <Checkbox
+            label="With Photo only"
+            checked={filters.profileWithPhoto}
+            onCheckedChange={(v) => setFilters((p) => ({ ...p, profileWithPhoto: !!v }))}
+          />
+          <Checkbox
+            label="Verified profiles only"
+            checked={filters.profileVerified}
+            onCheckedChange={(v) => setFilters((p) => ({ ...p, profileVerified: !!v }))}
+          />
         </div>
       </FilterSection>
 
       <div className="pt-4 flex gap-2">
-        <Button variant="ghost" size="sm" fullWidth>Clear</Button>
+        <Button variant="ghost" size="sm" fullWidth onClick={onReset}>Clear</Button>
         <Button variant="primary" size="sm" fullWidth>Apply</Button>
       </div>
     </div>

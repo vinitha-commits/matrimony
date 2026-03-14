@@ -3,8 +3,10 @@ import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { connectDB } from "@/lib/db/connection";
 import { User as UserModel, Profile } from "@/lib/db/models";
+import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   providers: [
     // Password login
     Credentials({
@@ -123,45 +125,4 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-
-  callbacks: {
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id;
-        token.phone = (user as any).phone;
-        token.role = (user as any).role;
-        token.gender = (user as any).gender;
-        token.isPremium = (user as any).isPremium;
-        token.plan = (user as any).plan;
-        token.profileComplete = (user as any).profileComplete;
-        token.isAdmin = (user as any).isAdmin;
-      }
-      return token;
-    },
-
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        (session.user as any).phone = token.phone;
-        (session.user as any).role = token.role;
-        (session.user as any).gender = token.gender;
-        (session.user as any).isPremium = token.isPremium;
-        (session.user as any).plan = token.plan;
-        (session.user as any).profileComplete = token.profileComplete;
-        (session.user as any).isAdmin = token.isAdmin;
-      }
-      return session;
-    },
-  },
-
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
-
-  session: {
-    strategy: "jwt",
-  },
-
-  secret: process.env.NEXTAUTH_SECRET,
 });

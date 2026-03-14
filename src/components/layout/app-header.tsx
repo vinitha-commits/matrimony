@@ -118,7 +118,7 @@ export function AppHeader({
                 <Link href="/settings">{t.nav.settings}</Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-error cursor-pointer" onClick={() => signOut({ callbackUrl: "/login" })}>{t.nav.logout}</DropdownMenuItem>
+              <DropdownMenuItem className="text-error cursor-pointer" onSelect={() => signOut({ callbackUrl: "/login" })}>{t.nav.logout}</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

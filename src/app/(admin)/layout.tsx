@@ -96,7 +96,7 @@ export default function AdminLayout({
                   <Link href="/admin/settings">Settings</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-error cursor-pointer" onClick={() => signOut({ callbackUrl: "/admin-login" })}>
+                <DropdownMenuItem className="text-error cursor-pointer" onSelect={() => signOut({ callbackUrl: "/admin-login" })}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
                 </DropdownMenuItem>

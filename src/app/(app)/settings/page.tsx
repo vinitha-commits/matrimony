@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 import { Button, Input, Card, Switch, Tabs, TabsList, TabsTrigger, TabsContent, RadioGroup } from "@/components/ui";
-import { User, Shield, Bell, CreditCard, HelpCircle, AlertTriangle } from "lucide-react";
+import { User, Shield, Bell, CreditCard, HelpCircle, AlertTriangle, LogOut } from "lucide-react";
 import { useTranslation } from "@/lib/i18n";
 
 export default function SettingsPage() {
@@ -150,6 +151,19 @@ export default function SettingsPage() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      {/* Logout */}
+      <Card variant="flat" padding="lg">
+        <Button
+          variant="destructive"
+          size="lg"
+          fullWidth
+          onClick={() => signOut({ callbackUrl: "/login" })}
+        >
+          <LogOut className="h-4 w-4" />
+          {t.nav.logout}
+        </Button>
+      </Card>
     </div>
   );
 }

@@ -174,6 +174,8 @@ function Step3Fields() {
         options={INCOME_RANGES.map((r) => ({ value: r, label: r }))}
       />
       <Input label="Work Location" placeholder="e.g., Chennai" />
+      <Input label="WhatsApp Number (Optional)" placeholder="+91 98765 43210" />
+      <p className="text-xs text-neutral-500 -mt-3">Premium members can reach you on WhatsApp for faster communication.</p>
     </>
   );
 }

@@ -110,6 +110,14 @@ export default function MyProfilePage() {
             <Input label={t.profile.employer} defaultValue="Infosys" />
             <Input label={t.profile.annualIncome} defaultValue="8-10 Lakhs" />
             <Input label={t.profile.workLocation} defaultValue="Chennai" />
+            <div className="border-t border-neutral-200 pt-5">
+              <Input
+                label="WhatsApp Number"
+                placeholder="+91 98765 43210"
+                defaultValue=""
+              />
+              <p className="mt-1 text-xs text-neutral-500">Premium members can connect with you via WhatsApp. Leave blank to hide.</p>
+            </div>
             {saved === "career" && <p className="text-sm text-success font-medium">Career details saved successfully!</p>}
             <Button variant="primary" size="md" onClick={() => handleSave("career")}>{t.common.save}</Button>
           </Card>

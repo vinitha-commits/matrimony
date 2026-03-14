@@ -59,6 +59,7 @@ const profileSchema = new Schema(
     city: String,
     state: String,
     country: { type: String, default: "India" },
+    whatsappNumber: String,
     // Lifestyle
     diet: { type: String, enum: ["vegetarian", "non_vegetarian", "eggetarian"], default: "vegetarian" },
     smoking: { type: String, enum: ["no", "occasionally", "yes"], default: "no" },

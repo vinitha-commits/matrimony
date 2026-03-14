@@ -70,6 +70,7 @@ export interface Profile {
   city: string;
   state: string;
   country: string;
+  whatsappNumber?: string;
   // Step 4 — Lifestyle & About
   diet: Diet;
   smoking: "no" | "occasionally" | "yes";
